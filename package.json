@@ -1,0 +1,22 @@
+{
+  "name": "com.tglgames.tgl-multi-select-dropdown",
+  "version": "0.0.1",
+  "displayName": "TGL Multi Select Dropdown",
+  "description": "This is a drop down which can select multiple options",
+  "author": {
+    "name" : "Rishabh Jain",
+    "email" : "thegamelearner@gmail.com",
+    "url" : "https://tglblog.vercel.app/"
+  },
+  "unity": "2019.1",
+  "unityRelease": "0b5",
+  "documentationUrl": "",
+  "changelogUrl": "",
+  "licensesUrl": "https://opensource.org/license/apache-2-0",
+  "dependencies": { },
+  "keywords": [
+    "TGL",
+    "Drop Down",
+    "Multi Select Dropdown"
+  ]
+}

@@ -124,6 +124,64 @@ RectTransform:
   m_CorrespondingSourceObject: {fileID: 45360135117244194, guid: 37a6ad7ad2e77b4ad96bd1db2743e242, type: 3}
   m_PrefabInstance: {fileID: 1651168689754778671}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &318127818
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 318127819}
+  - component: {fileID: 318127820}
+  m_Layer: 0
+  m_Name: populate drop down options
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &318127819
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 318127818}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 1606.9186, y: 1219.9562, z: -2.9477625}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &318127820
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 318127818}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6877f2d1f44deadd7bbd91d618b6873f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  dropdown: {fileID: 1175682365}
+  availableDdOptions:
+  - optionSprite: {fileID: 0}
+    optionText: op_1
+  - optionSprite: {fileID: 0}
+    optionText: op_2
+  - optionSprite: {fileID: 0}
+    optionText: op_3
+  - optionSprite: {fileID: 0}
+    optionText: op_4
+  - optionSprite: {fileID: 0}
+    optionText: op_5
+  - optionSprite: {fileID: 0}
+    optionText: op_6
 --- !u!1 &615473949
 GameObject:
   m_ObjectHideFlags: 0
@@ -426,6 +484,17 @@ Canvas:
   m_SortingLayerID: 0
   m_SortingOrder: 0
   m_TargetDisplay: 0
+--- !u!114 &1175682365 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 8000903823972596915, guid: 37a6ad7ad2e77b4ad96bd1db2743e242, type: 3}
+  m_PrefabInstance: {fileID: 1651168689754778671}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b14af3a363354c1f8651beca0d30022e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1233646762
 GameObject:
   m_ObjectHideFlags: 0
@@ -687,26 +756,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: MultiSelect DropDown
       objectReference: {fileID: 0}
-    - target: {fileID: 8000903823972596915, guid: 37a6ad7ad2e77b4ad96bd1db2743e242, type: 3}
-      propertyPath: availableDdOptions.Array.size
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8000903823972596915, guid: 37a6ad7ad2e77b4ad96bd1db2743e242, type: 3}
-      propertyPath: availableDdOptions.Array.data[0].optionText
-      value: 
-      objectReference: {fileID: 0}
-    - target: {fileID: 8000903823972596915, guid: 37a6ad7ad2e77b4ad96bd1db2743e242, type: 3}
-      propertyPath: availableDdOptions.Array.data[1].optionText
-      value: 
-      objectReference: {fileID: 0}
-    - target: {fileID: 8000903823972596915, guid: 37a6ad7ad2e77b4ad96bd1db2743e242, type: 3}
-      propertyPath: availableDdOptions.Array.data[2].optionText
-      value: 
-      objectReference: {fileID: 0}
-    - target: {fileID: 8000903823972596915, guid: 37a6ad7ad2e77b4ad96bd1db2743e242, type: 3}
-      propertyPath: availableDdOptions.Array.data[3].optionSprite
-      value: 
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -720,3 +769,4 @@ SceneRoots:
   - {fileID: 661180051}
   - {fileID: 1497364954}
   - {fileID: 615473952}
+  - {fileID: 318127819}

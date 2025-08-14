@@ -1,22 +1,25 @@
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 namespace TGL.Utilities.UI
 {
 
-	[RequireComponent(typeof(Button), typeof(ToggleGroup))]
+	[RequireComponent(typeof(Button), typeof(ToggleGroup), typeof(RectTransform))]
 	public class MultiSelectDropdown : MonoBehaviour
 	{
 		#region InspectorVariables
 		[Header("UI Setup")]
 		[Tooltip("The drop down button"), SerializeField] private Button dropdownButton; // drop down button for choosing drop down option
-		[Tooltip("selected option value when only one option is selected"), SerializeField] private MultiSelectDropdownOption optionShown;
-
 		[Tooltip("scroll view Reference"), SerializeField] private ScrollRect optionsPanel;
+		[Tooltip("options parent content"), SerializeField] private VerticalLayoutGroup optionsParent;
+
+		[Header("Vsible Symbols")]
 		[Tooltip("The image or Text component that shows option to open the options panel"), SerializeField] private Behaviour optionsPanelOpenSymbol;
 		[Tooltip("The image or Text component that shows option to close the options panel"), SerializeField] private Behaviour optionsPanelClosedSymbol;
+		[Tooltip("selected option value when only one option is selected"), SerializeField] private MultiSelectDropdownOption optionShown;
 
 		[Header("options Setup")]
 		[Tooltip("The prefab we use to create options"), SerializeField] private MultiSelectDropdownOption optionPrefab; // selected option value
@@ -32,10 +35,13 @@ namespace TGL.Utilities.UI
 		private List<MultiSelectDropdownOptionData> selectedOptions;
 		private List<MultiSelectDropdownOption> generatedOptions = new();
 		private ScrollRect generatedOptionsPanel = null; // TODO : remove this when we use object pool
+		private VerticalLayoutGroup generatedOptionsParent;
 
 		private bool isOpen;
 		private bool usingDataFromInspector;
 		private int myDropDownIds;
+		// deselection
+		private RectTransform dropDownRt;
 		#endregion privateVariables
 
 		#region MonoBehaviour_Methods
@@ -49,6 +55,22 @@ namespace TGL.Utilities.UI
 			availableOptions = usingDataFromInspector ? GetDdOptionsFromData(availableDdOptions) : new List<MultiSelectDropdownOptionData>();
 		}
 
+		void Update()
+		{
+			if (isOpen)
+			{
+				if (Input.GetMouseButtonDown(0))
+				{
+					ClosePanelIfClickedOutside(Input.mousePosition);
+				}
+
+				if (Input.touchCount == 1 && Input.GetTouch(0).phase == TouchPhase.Began)
+				{
+					ClosePanelIfClickedOutside(Input.GetTouch(0).position);
+				}
+			}
+		}
+
 		private void OnDestroy()
 		{
 			RemoveListeners();
@@ -59,6 +81,7 @@ namespace TGL.Utilities.UI
 		#region private_Methods
 		private void SetupAndValidate()
 		{
+			dropDownRt = GetComponent<RectTransform>();
 			if (dropdownButton == null)
 			{
 				dropdownButton = GetComponent<Button>();
@@ -107,6 +130,12 @@ namespace TGL.Utilities.UI
 			{
 				optionsPanel.gameObject.SetActive(false);
 			}
+
+			if (optionsParent == null)
+			{
+				Debug.LogWarning($"could not find or set the {nameof(optionsParent)} variable in {nameof(MultiSelectDropdown)}", gameObject);
+				return;
+			}
 		}
 
 		private void SetListeners()
@@ -150,11 +179,16 @@ namespace TGL.Utilities.UI
 
 		private void OpenOptionsPanel()
 		{
-			Debug.Log($"Opening the panel");
 			// create the options panel
 			if (generatedOptionsPanel == null)
 			{
 				generatedOptionsPanel = Instantiate(optionsPanel, optionsPanel.transform.parent);
+				generatedOptionsParent = generatedOptionsPanel.GetComponentInChildren<VerticalLayoutGroup>(true);
+				if (generatedOptionsParent == null)
+				{
+					Debug.LogWarning($"could not find or set the {nameof(generatedOptionsParent)} variable in {nameof(MultiSelectDropdown)}", gameObject);
+					return;
+				}
 			}
 			else
 			{
@@ -179,19 +213,15 @@ namespace TGL.Utilities.UI
 
 		private void CloseOptionsPanel()
 		{
-			Debug.Log($"CloseOptionsPanel the panel");
 			DestroyOptionItems();
-
 			if (generatedOptionsPanel != null)
 			{
-				Debug.Log($"generatedOptionsPanel is not null, destroying it");
 				Destroy(generatedOptionsPanel.gameObject); // TODO: replace with Object pool or static generated option later
 				generatedOptionsPanel = null; // TODO : remove this when we use object pool
-				Debug.Log($"generatedOptionsPanel is destroyed");
 			}
 			else
 			{
-				Debug.LogWarning($"While closing the options panel, generatedOptionsPanel is already null");
+				Debug.LogWarning($"While closing the options panel, {nameof(generatedOptionsPanel)} is already null");
 			}
 		}
 
@@ -202,7 +232,7 @@ namespace TGL.Utilities.UI
 				Debug.LogWarning($"the options panel {nameof(generatedOptionsPanel)}, is null, where should the options be made?");
 				return;
 			}
-			
+
 			if (availableOptions is { Count: > 0 })
 			{
 				if (generatedOptions.Count > 0)
@@ -210,7 +240,7 @@ namespace TGL.Utilities.UI
 					// remove any old options before we generate list of active options
 					DestroyOptionItems();
 				}
-				
+
 				foreach (MultiSelectDropdownOptionData optionData in availableOptions)
 				{
 					MultiSelectDropdownOption optionInstance = Instantiate(optionPrefab, generatedOptionsPanel.content);
@@ -220,6 +250,28 @@ namespace TGL.Utilities.UI
 					// if we use 'myDropDownToggleGroup', we can only select one option
 					optionInstance.onToggleValueChanged += VerifySelectedItemsCount;  // TODO: Handle well when we switch to Object Pool, we will need to remove the listener as well in object pool
 					generatedOptions.Add(optionInstance);  // TODO: replace with Object pool later
+				}
+
+				if (generatedOptionsParent != null)
+				{
+					RectTransform generatedOptionsParentRt = generatedOptionsParent.GetComponent<RectTransform>();
+					if (generatedOptionsParentRt == null)
+					{
+						Debug.LogWarning($"{nameof(generatedOptionsParentRt)} is null, cannot set size");
+					}
+					else
+					{
+						RectTransform optionsPanelRt = optionPrefab.GetComponent<RectTransform>();
+						if (optionsPanelRt == null)
+						{
+							Debug.LogWarning($"{nameof(optionsPanelRt)} is null, cannot set size");
+						}
+						else
+						{
+							float contentHeightWithOptions = (generatedOptions.Count * optionsPanelRt.sizeDelta.y) + (generatedOptions.Count * optionsParent.spacing) + optionsParent.padding.top + optionsParent.padding.bottom;
+							generatedOptionsParentRt.sizeDelta = new Vector2(generatedOptionsParentRt.sizeDelta.x, contentHeightWithOptions);
+						}
+					}
 				}
 			}
 			else
@@ -236,12 +288,39 @@ namespace TGL.Utilities.UI
 				// No options to delete
 				return;
 			}
-			
+
 			foreach (MultiSelectDropdownOption generatedOpt in generatedOptions)
 			{
 				Destroy(generatedOpt.gameObject); // TODO: replace with Object pool later
 			}
 			generatedOptions.Clear();
+		}
+
+		private void ClosePanelIfClickedOutside(Vector2 screenPos)
+		{
+			if (!CheckPointerInsideDd(screenPos))
+			{
+				isOpen = false;
+				CloseOptionsPanel();
+			}
+		}
+
+		private bool CheckPointerInsideDd(Vector2 screenPos)
+		{
+			PointerEventData eventData = new PointerEventData(EventSystem.current);
+			eventData.position = screenPos;
+			List<RaycastResult> results = new List<RaycastResult>();
+			// EventSystem.current.RaycastAll(eventData, results);
+			EventSystem.current.RaycastAll(eventData, results);
+			foreach (RaycastResult result in results)
+			{
+				// Check if hit object is part of the dropdown hierarchy
+				if (result.gameObject.transform.IsChildOf(dropDownRt))
+				{
+					return true;
+				}
+			}
+			return false;
 		}
 		#endregion private_Methods
 
@@ -324,7 +403,7 @@ namespace TGL.Utilities.UI
 			}
 			return optionsWereAdded;
 		}
-		
+
 		public bool AddOption(DataDropdownOption dropDownOption)
 		{
 			bool optionWasAdded = false;
@@ -350,6 +429,7 @@ namespace TGL.Utilities.UI
 
 			return optionWasAdded;
 		}
+
 		#endregion public_Methods
 	}
 }

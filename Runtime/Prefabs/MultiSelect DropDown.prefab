@@ -798,7 +798,6 @@ GameObject:
   m_Component:
   - component: {fileID: 7705326645908502937}
   - component: {fileID: 7470241571304658942}
-  - component: {fileID: 6270417517217718858}
   m_Layer: 0
   m_Name: Content Reference
   m_TagString: Untagged
@@ -852,20 +851,6 @@ MonoBehaviour:
   m_ChildScaleWidth: 0
   m_ChildScaleHeight: 0
   m_ReverseArrangement: 0
---- !u!114 &6270417517217718858
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3799500378686553519}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3245ec927659c4140ac4f8d17403cc18, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_HorizontalFit: 0
-  m_VerticalFit: 0
 --- !u!1 &4160826491676970696
 GameObject:
   m_ObjectHideFlags: 0
@@ -1558,21 +1543,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   dropdownButton: {fileID: 1173628435792273883}
-  optionShown: {fileID: 397770044873300242}
   optionsPanel: {fileID: 4763059024552468801}
+  optionsParent: {fileID: 7470241571304658942}
   optionsPanelOpenSymbol: {fileID: 2735314943826935417}
   optionsPanelClosedSymbol: {fileID: 8316596685147176997}
+  optionShown: {fileID: 397770044873300242}
   optionPrefab: {fileID: 574499546155688628}
   myDropDownToggleGroup: {fileID: 8746245038885875083}
-  availableDdOptions:
-  - optionSprite: {fileID: 0}
-    optionText: 5
-  - optionSprite: {fileID: 0}
-    optionText: 9
-  - optionSprite: {fileID: 0}
-    optionText: 7
-  - optionSprite: {fileID: 10915, guid: 0000000000000000f000000000000000, type: 0}
-    optionText: 
+  availableDdOptions: []
 --- !u!114 &8746245038885875083
 MonoBehaviour:
   m_ObjectHideFlags: 0

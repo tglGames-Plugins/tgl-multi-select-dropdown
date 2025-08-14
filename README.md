@@ -20,6 +20,6 @@ Samples can be found in "Samples" folder. There is also a scene with the necessa
 - Open unity package manaegr
 - On top right, there is a button to add a package
 - add a git package (from git URL)
-- fill the Https link for the package, in this case, 'https://github.com/tglGames-Plugins/Finite-State-Machine.git'
+- fill the Https link for the package, in this case, 'https://github.com/tglGames-Plugins/tgl-multi-select-dropdown.git'
 - Add
 The package will be added under 'TGL FSM' in packages, use as needed.

@@ -16,18 +16,18 @@ namespace TGL.Utilities.UI
 		/// <summary>
 		/// Set for the prefab which is used to make all options
 		/// </summary>
-		[Tooltip("Set for the prefab which is used to make all options"), SerializeField] public bool isPrefab;
+		[Tooltip("Set for the prefab which is used to make all options"), SerializeField] internal bool isPrefab;
 		[SerializeField] private Image optionSprite;
 		[SerializeField] private TMP_Text optionText;
 		[SerializeField] private Toggle optionToggle;
 		private bool invokeToggle;
 		
-		public Action<int, bool> onToggleValueChanged;
+		internal Action<int, bool> onToggleValueChanged;
 #endregion variables
 
 
 #region properties
-		public bool IsOptionSelected => optionToggle.isOn;
+		internal bool IsOptionSelected => optionToggle.isOn;
 #endregion properties
 
 
@@ -58,8 +58,8 @@ namespace TGL.Utilities.UI
 #endregion MonoBehaviour_Methods
 
 		
-#region public_Methods
-		public void SetSelected(bool value)
+#region internal_Methods
+		internal void SetSelected(bool value)
 		{
 			if (isPrefab)
 			{
@@ -79,7 +79,7 @@ namespace TGL.Utilities.UI
 			onToggleValueChanged?.Invoke(dataId, value);
 		}
 
-		public void SetToggleGroup(ToggleGroup group)
+		internal void SetToggleGroup(ToggleGroup group)
 		{
 			optionToggle.group = group;
 		}
@@ -114,7 +114,7 @@ namespace TGL.Utilities.UI
 			
 			UpdateOptionValues();
 		}
-#endregion public_Methods
+#endregion internal_Methods
 
 
 #region private_Methods

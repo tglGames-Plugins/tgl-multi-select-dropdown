@@ -4,22 +4,22 @@ using UnityEngine;
 namespace TGL.Utilities.UI
 {
 	[Serializable]
-	internal class MultiSelectDropdownOptionData
+	public class MultiSelectDropdownOptionData
 	{
 #region variables
-		internal int dataId;
+		public int dataId;
 		internal Sprite optionSprite;
 		internal string optionText;
 		
 		/// <summary>
 		/// if true, we do not have <see cref="optionText"/>
 		/// </summary>
-		internal bool usesOnlyImage;
+		public bool usesOnlyImage;
 		
 		/// <summary>
 		/// if true, uses both <see cref="optionSprite"/> and <see cref="optionText"/>
 		/// </summary>
-		internal bool usesBoth;
+		public bool usesBoth;
 		internal bool isSelected;
 #endregion variables
 
@@ -68,17 +68,5 @@ namespace TGL.Utilities.UI
 			dataId = optionId;
 		}
 #endregion constructor
-	}
-
-	[Serializable]
-	public class DataDropdownOption
-	{
-		public Sprite optionSprite;
-		public string optionText;
-
-		public bool IsValid()
-		{
-			return !string.IsNullOrEmpty(optionText) || optionSprite != null;
-		}
 	}
 }

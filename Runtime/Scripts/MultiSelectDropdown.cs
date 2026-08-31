@@ -1,5 +1,7 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
@@ -55,20 +57,9 @@ namespace TGL.Utilities.UI
 			availableOptions = usingDataFromInspector ? GetDdOptionsFromData(availableDdOptions) : new List<MultiSelectDropdownOptionData>();
 		}
 
-		void Update()
+		private void Update()
 		{
-			if (isOpen)
-			{
-				if (Input.GetMouseButtonDown(0))
-				{
-					ClosePanelIfClickedOutside(Input.mousePosition);
-				}
-
-				if (Input.touchCount == 1 && Input.GetTouch(0).phase == TouchPhase.Began)
-				{
-					ClosePanelIfClickedOutside(Input.GetTouch(0).position);
-				}
-			}
+			ConfirmClicksInsideDdWhenOpen();
 		}
 
 		private void OnDestroy()
@@ -164,6 +155,25 @@ namespace TGL.Utilities.UI
 			return instanceDdOption;
 		}
 
+		/// <summary>
+		/// Close the dropdown if user clicks outside the drop down while it is open
+		/// </summary>
+		private void ConfirmClicksInsideDdWhenOpen()
+		{
+			if (isOpen)
+			{
+				if (Input.GetMouseButtonDown(0))
+				{
+					ClosePanelIfClickedOutside(Input.mousePosition);
+				}
+
+				if (Input.touchCount == 1 && Input.GetTouch(0).phase == TouchPhase.Began)
+				{
+					ClosePanelIfClickedOutside(Input.GetTouch(0).position);
+				}
+			}
+		}
+
 		private void ToggleOptionsPanel()
 		{
 			isOpen = !isOpen;
@@ -198,6 +208,7 @@ namespace TGL.Utilities.UI
 			GenerateOptionItems();
 
 			generatedOptionsPanel.gameObject.SetActive(true);
+			ShowOptionsPanelAsOpened(true);
 		}
 
 		private void VerifySelectedItemsCount(int optionId, bool optionWasSelected)
@@ -223,6 +234,13 @@ namespace TGL.Utilities.UI
 			{
 				Debug.LogWarning($"While closing the options panel, {nameof(generatedOptionsPanel)} is already null");
 			}
+			ShowOptionsPanelAsOpened(false);
+		}
+
+		private void ShowOptionsPanelAsOpened(bool isOpened)
+		{
+			optionsPanelOpenSymbol.gameObject.SetActive(!isOpened);
+			optionsPanelClosedSymbol.gameObject.SetActive(isOpened);
 		}
 
 		private void GenerateOptionItems()
@@ -244,7 +262,7 @@ namespace TGL.Utilities.UI
 				foreach (MultiSelectDropdownOptionData optionData in availableOptions)
 				{
 					MultiSelectDropdownOption optionInstance = Instantiate(optionPrefab, generatedOptionsPanel.content);
-					optionInstance.Initialize(optionData, false);
+					optionInstance.Initialize(optionData);
 					optionInstance.gameObject.SetActive(true);
 					optionInstance.SetToggleGroup(null);
 					// if we use 'myDropDownToggleGroup', we can only select one option
@@ -324,8 +342,24 @@ namespace TGL.Utilities.UI
 		}
 		#endregion private_Methods
 
+		#region public_properties
+
+		public Action<MultiSelectDropdown> OnValueChanged;
+		public Image CaptionImage => optionShown.OptionImage;
+		public TMP_Text CaptionText => optionShown.OptionText;
+		public RectTransform Template => optionPrefab.GetComponent<RectTransform>(); // MultiSelectDropdownOption optionPrefab
+		public List<MultiSelectDropdownOptionData> Options => availableOptions;
+		public List<int> Values => selectedOptions.Select(x=> x.dataId).ToList();
+		
+		#endregion public_properties
+
 		#region public_Methods
 
+		/// <summary>
+		/// Sets all options in the multi-select dropdown by setting up <see cref="availableOptions"/>
+		/// </summary>
+		/// <param name="dropDownOptions">The options to use</param>
+		/// <returns>did we successfully add all valid options</returns>
 		public bool SetOptions(List<DataDropdownOption> dropDownOptions)
 		{
 			bool optionsWereSet = false;
@@ -365,6 +399,11 @@ namespace TGL.Utilities.UI
 			return optionsWereSet;
 		}
 
+		/// <summary>
+		/// Add a list of options in the multi-select dropdown by adding range of options to <see cref="availableOptions"/>
+		/// </summary>
+		/// <param name="dropDownOptions">New Options to add</param>
+		/// <returns>did we successfully add all valid options</returns>
 		public bool AddOptions(List<DataDropdownOption> dropDownOptions)
 		{
 			bool optionsWereAdded = false;
@@ -404,6 +443,11 @@ namespace TGL.Utilities.UI
 			return optionsWereAdded;
 		}
 
+		/// <summary>
+		/// Add an option in the multi-select dropdown by adding option to <see cref="availableOptions"/>
+		/// </summary>
+		/// <param name="dropDownOption">The option to use</param>
+		/// <returns>did we successfully add the option</returns>
 		public bool AddOption(DataDropdownOption dropDownOption)
 		{
 			bool optionWasAdded = false;

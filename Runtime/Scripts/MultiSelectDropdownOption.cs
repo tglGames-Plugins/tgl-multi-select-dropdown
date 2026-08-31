@@ -5,7 +5,7 @@ using UnityEngine.UI;
 
 namespace TGL.Utilities.UI
 {
-	[RequireComponent(typeof(Toggle))]
+	[RequireComponent(typeof(Toggle), typeof(RectTransform))]
 	public class MultiSelectDropdownOption : MonoBehaviour
 	{
 #region variables
@@ -24,6 +24,13 @@ namespace TGL.Utilities.UI
 		
 		internal Action<int, bool> onToggleValueChanged;
 #endregion variables
+
+#region Properties
+
+		public Image OptionImage => optionSprite;
+		public TMP_Text OptionText => optionText;
+
+#endregion Properties
 
 
 #region properties
@@ -84,15 +91,15 @@ namespace TGL.Utilities.UI
 			optionToggle.group = group;
 		}
 
-		internal void Initialize(MultiSelectDropdownOptionData optionData, bool _isPrefab)
+		internal void Initialize(MultiSelectDropdownOptionData optionData)
 		{
-			isPrefab = _isPrefab;
+			isPrefab = false;
 			if (!IsValidSetup())
 			{
 				Debug.LogWarning($"The option of type {nameof(MultiSelectDropdownOption)} is not set up properly, please check", gameObject);
 			}
 
-			if (_isPrefab)
+			if (isPrefab)
 			{
 				Debug.LogWarning($"Cannot call {nameof(Initialize)} when {nameof(isPrefab)} is true");
 				return;

@@ -474,6 +474,108 @@ namespace TGL.Utilities.UI
 			return optionWasAdded;
 		}
 
+		/// <summary>
+		/// Sets the values and sends the Notifications in 'OnValueChanged'
+		/// </summary>
+		/// <param name="valuesToSet">The list of option data values to set as selected</param>
+		public void SetValues(List<MultiSelectDropdownOptionData> valuesToSet)
+		{
+			if (availableOptions == null || availableOptions.Count == 0)
+			{
+				Debug.LogWarning($"[{nameof(SetValues)}]: No available options exist in the dropdown.");
+				return;
+			}
+
+			foreach (var option in availableOptions)
+			{
+				option.isSelected = false;
+			}
+
+			if (valuesToSet != null && valuesToSet.Count > 0)
+			{
+				foreach (var valueToSet in valuesToSet)
+				{
+					if (valueToSet == null) continue;
+
+					var match = availableOptions.FirstOrDefault(x => 
+						x == valueToSet ||
+						x.dataId == valueToSet.dataId ||
+						(x.usesBoth && valueToSet.usesBoth && x.GetOptionText == valueToSet.GetOptionText && x.GetOptionSprite == valueToSet.GetOptionSprite) ||
+						(x.usesOnlyImage && valueToSet.usesOnlyImage && x.GetOptionSprite == valueToSet.GetOptionSprite) ||
+						(!x.usesBoth && !x.usesOnlyImage && !valueToSet.usesBoth && !valueToSet.usesOnlyImage && x.GetOptionText == valueToSet.GetOptionText)
+					);
+
+					if (match != null)
+					{
+						match.isSelected = true;
+					}
+					else
+					{
+						Debug.LogWarning($"[{nameof(SetValues)}]: Could not find a matching option for value.");
+					}
+				}
+			}
+
+			selectedOptions = availableOptions.Where(x => x.isSelected).ToList();
+
+			if (isOpen)
+			{
+				GenerateOptionItems();
+			}
+
+			OnValueChanged?.Invoke(this);
+		}
+
+		/// <summary>
+		/// Sets the values without invoking the OnValueChanged action
+		/// </summary>
+		/// <param name="valuesToSet">The list of option data values to set as selected</param>
+		public void SetValuesWithoutNotify(List<MultiSelectDropdownOptionData> valuesToSet)
+		{
+			if (availableOptions == null || availableOptions.Count == 0)
+			{
+				Debug.LogWarning($"[{nameof(SetValuesWithoutNotify)}]: No available options exist in the dropdown.");
+				return;
+			}
+
+			foreach (var option in availableOptions)
+			{
+				option.isSelected = false;
+			}
+
+			if (valuesToSet != null && valuesToSet.Count > 0)
+			{
+				foreach (var valueToSet in valuesToSet)
+				{
+					if (valueToSet == null) continue;
+
+					var match = availableOptions.FirstOrDefault(x => 
+						x == valueToSet ||
+						x.dataId == valueToSet.dataId ||
+						(x.usesBoth && valueToSet.usesBoth && x.GetOptionText == valueToSet.GetOptionText && x.GetOptionSprite == valueToSet.GetOptionSprite) ||
+						(x.usesOnlyImage && valueToSet.usesOnlyImage && x.GetOptionSprite == valueToSet.GetOptionSprite) ||
+						(!x.usesBoth && !x.usesOnlyImage && !valueToSet.usesBoth && !valueToSet.usesOnlyImage && x.GetOptionText == valueToSet.GetOptionText)
+					);
+
+					if (match != null)
+					{
+						match.isSelected = true;
+					}
+					else
+					{
+						Debug.LogWarning($"[{nameof(SetValuesWithoutNotify)}]: Could not find a matching option for value.");
+					}
+				}
+			}
+
+			selectedOptions = availableOptions.Where(x => x.isSelected).ToList();
+
+			if (isOpen)
+			{
+				GenerateOptionItems();
+			}
+		}
+
 		#endregion public_Methods
 	}
 }

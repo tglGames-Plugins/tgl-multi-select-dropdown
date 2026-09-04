@@ -4,8 +4,9 @@ This is useful for adding filters that are either 'on' or 'off'.
 We can use image(sprite) or text(string) or both for options.
 
 ## Limitations
-Have not tested throughly
-
+Known Limitations:
+- Values list of int is skipped, as data id does not gurantee absolute match in every edge case.
+- Have not tested throughly
 
 ### How to Use
 To use this plugin, follow these steps:
@@ -18,25 +19,17 @@ To use this plugin, follow these steps:
     - CaptionText: The top Text component which shows all currently selected Text
     - Options: All available options to choose from (`List<MultiSelectDropdownOptionData>`)
     - Template: Rect Transform of the template - (`MultiSelectDropdownOption optionPrefab`)
-    - Values: id number of the currently selected options in the Dropdown (`List<int>`)
   - Methods
     - SetOptions()
     - AddOption()
     - AddOptions()
-    - ClearOptions()
-    - Hide() - close the drop down 
-    - Show() - Open the drop down 
     - SetValues() - Set the values and send the Notifications in 'OnValueChanged' 
     - SetValuesWithoutNotify() - Set the values but does not invoke the event 'OnValueChanged'
+    - ClearOptions()
 
 
 ## Samples
-Samples can be found in "Samples" folder. There is also a scene with the necessary information.
+Samples can be found in "Samples" folder. There is also a scene with example prefab used.
 
 ## How to add this package?
-- Open unity package manaegr
-- On top right, there is a button to add a package
-- add a git package (from git URL)
-- fill the Https link for the package, in this case, 'https://github.com/tglGames-Plugins/tgl-multi-select-dropdown.git'
-- Add
-The package will be added under 'TGL FSM' in packages, use as needed.
+See [How to add this package](HowToAddPackage.md) for detailed instructions.

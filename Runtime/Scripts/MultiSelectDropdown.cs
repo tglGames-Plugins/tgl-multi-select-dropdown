@@ -349,7 +349,7 @@ namespace TGL.Utilities.UI
 		public TMP_Text CaptionText => optionShown.OptionText;
 		public RectTransform Template => optionPrefab.GetComponent<RectTransform>(); // MultiSelectDropdownOption optionPrefab
 		public List<MultiSelectDropdownOptionData> Options => availableOptions;
-		public List<int> Values => selectedOptions.Select(x=> x.dataId).ToList();
+		// public List<int> Values => selectedOptions.Select(x=> x.dataId).ToList();
 		
 		#endregion public_properties
 
@@ -478,12 +478,13 @@ namespace TGL.Utilities.UI
 		/// Sets the values and sends the Notifications in 'OnValueChanged'
 		/// </summary>
 		/// <param name="valuesToSet">The list of option data values to set as selected</param>
-		public void SetValues(List<MultiSelectDropdownOptionData> valuesToSet)
+		public bool SetValues(List<MultiSelectDropdownOptionData> valuesToSet)
 		{
+			bool valueUpdated = false;
 			if (availableOptions == null || availableOptions.Count == 0)
 			{
 				Debug.LogWarning($"[{nameof(SetValues)}]: No available options exist in the dropdown.");
-				return;
+				return valueUpdated;
 			}
 
 			foreach (var option in availableOptions)
@@ -508,6 +509,7 @@ namespace TGL.Utilities.UI
 					if (match != null)
 					{
 						match.isSelected = true;
+						valueUpdated = true;
 					}
 					else
 					{
@@ -524,6 +526,7 @@ namespace TGL.Utilities.UI
 			}
 
 			OnValueChanged?.Invoke(this);
+			return valueUpdated;
 		}
 
 		/// <summary>
@@ -570,6 +573,17 @@ namespace TGL.Utilities.UI
 
 			selectedOptions = availableOptions.Where(x => x.isSelected).ToList();
 
+			if (isOpen)
+			{
+				GenerateOptionItems();
+			}
+		}
+
+		public void ClearOptions()
+		{
+			availableOptions.Clear();
+			selectedOptions.Clear();
+			usingDataFromInspector = false;
 			if (isOpen)
 			{
 				GenerateOptionItems();

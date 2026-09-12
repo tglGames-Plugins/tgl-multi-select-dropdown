@@ -1,6 +1,6 @@
 {
-  "name": "com.tglgames.tgl-multi-select-dropdown",
-  "version": "1.0.5",
+  "name": "@tglGames-Plugins/com.tglgames.tgl-multi-select-dropdown",
+  "version": "1.0.6",
   "displayName": "TGL Multi Select Dropdown",
   "description": "This is a drop down which can select multiple options",
   "author": {

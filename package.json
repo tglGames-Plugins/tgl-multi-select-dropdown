@@ -8,6 +8,7 @@
     "email" : "thegamelearner@gmail.com",
     "url" : "https://tglblog.vercel.app/"
   },
+  "publishConfig": { "registry": "https://npm.pkg.github.com/@tglGames-Plugins" },
   "unity": "2019.1",
   "unityRelease": "0b5",
   "documentationUrl": "",
